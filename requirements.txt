@@ -1,0 +1,5 @@
+matplotlib==3.5.1
+numpy==1.22.2
+pytorch_msssim==0.2.1
+torch==1.10.2
+xarray==0.21.1
