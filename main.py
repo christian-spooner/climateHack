@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from dataset import ClimateHackDataset
 from loss import MS_SSIMLoss
 from submission.model import Model
+from flow import flowIm
 import timeit
 import sys
 import numpy as np
@@ -27,17 +28,18 @@ for i in range(1, 13):
     newIm = flowIm(images[i-1], images[i])
     images.append(newIm)
 
-'''
+
 plt.rcParams["figure.figsize"] = (20, 12)
-fig, ax = plt.subplots(1, 2, figsize=(15,3))
-for i, d in enumerate(["2020-07-04 12:00", "2020-07-04 12:05"]):
-    ax[i].imshow(dataset["data"].sel(time=d).isel(x=slice(128, 256), y=slice(128, 256)).to_numpy(), cmap='viridis')
+fig, ax = plt.subplots(1, 14, figsize=(15,3))
+for i in range(0, 14):
+    print(i)
+    ax[i].imshow(images[i], cmap='viridis')
     ax[i].get_xaxis().set_visible(False)
     ax[i].get_yaxis().set_visible(False)
 fig.tight_layout()
 fig.subplots_adjust(wspace=0, hspace=0)
 plt.show()
-'''
+
 
 stop = timeit.default_timer()
 execution_time = stop - start

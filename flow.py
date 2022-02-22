@@ -15,20 +15,6 @@ import numpy as np
 from imageio import imread
 from PIL import Image
 
-DATA_PATH = "./eumetsat_seviri_hrv_uk.zarr"
-dataset = xr.open_dataset(
-    DATA_PATH, 
-    engine="zarr",
-    chunks="auto",  # Load the data as a Dask array
-)
-
-im1 = dataset["data"].sel(time="2020-07-04 12:00").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
-im2 = dataset["data"].sel(time="2020-07-04 12:05").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
-im1 = np.float64(im1)
-im2 = np.float64(im2)
-
-flow = cv2.calcOpticalFlowFarneback(im1, im2, None, 0.5, 3, 15, 3, 5, 1.2, 0)
-
 
 def draw_hsv(flow):
     h, w = flow.shape[:2]
@@ -52,10 +38,16 @@ def warp_flow(img, flow):
     return res
 
 
-hsv = draw_hsv(flow)
-im2w = warp_flow(im2, flow)
+def flowIm(im1, im2):
+    im1 = np.float64(im1)
+    im2 = np.float64(im2)
+    flow = cv2.calcOpticalFlowFarneback(im1, im2, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+    hsv = draw_hsv(flow)
+    im2w = warp_flow(im2, flow)
+    return im2w
 
 
+'''
 fig, ax = plt.subplots(1, 3, figsize=(15,3))
 for i, d in enumerate([im1, im2, im2w]):
     ax[i].imshow(d, cmap='viridis')
@@ -69,3 +61,4 @@ cv2.imwrite("tmp/flow.jpg",hsv)
 cv2.imwrite("tmp/im1.jpg", im1)
 cv2.imwrite("tmp/im2.jpg", im2)
 cv2.imwrite("tmp/im2w.jpg", im2w)
+'''
