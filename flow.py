@@ -48,17 +48,23 @@ def flowIm(im1, im2):
 
 
 '''
+DATA_PATH = "./eumetsat_seviri_hrv_uk.zarr"
+dataset = xr.open_dataset(
+    DATA_PATH, 
+    engine="zarr",
+    chunks="auto",  # Load the data as a Dask array
+)
+im0 = dataset["data"].sel(time="2020-07-04 12:00").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
+im1 = dataset["data"].sel(time="2020-07-04 12:05").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
+im2 = flowIm(im0, im1)
+
 fig, ax = plt.subplots(1, 3, figsize=(15,3))
-for i, d in enumerate([im1, im2, im2w]):
+for i, d in enumerate([im0, im1, im2]):
     ax[i].imshow(d, cmap='viridis')
     ax[i].get_xaxis().set_visible(False)
     ax[i].get_yaxis().set_visible(False)
 fig.tight_layout()
 fig.subplots_adjust(wspace=0, hspace=0)
 plt.show()
-
-cv2.imwrite("tmp/flow.jpg",hsv)
-cv2.imwrite("tmp/im1.jpg", im1)
-cv2.imwrite("tmp/im2.jpg", im2)
-cv2.imwrite("tmp/im2w.jpg", im2w)
 '''
+

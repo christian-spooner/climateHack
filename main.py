@@ -23,17 +23,23 @@ dataset = xr.open_dataset(
 im0 = dataset["data"].sel(time="2020-07-04 12:00").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
 im1 = dataset["data"].sel(time="2020-07-04 12:05").isel(x=slice(128, 256), y=slice(128, 256)).to_numpy()
 
+
 images = [im0, im1]
-for i in range(1, 13):
+for i in range(1, 25):
     newIm = flowIm(images[i-1], images[i])
     images.append(newIm)
 
 
+output = []
+for i in range(2, 26):
+    output.append(images[i][32:96, 32:96])
+
+
+'''
 plt.rcParams["figure.figsize"] = (20, 12)
-fig, ax = plt.subplots(1, 14, figsize=(15,3))
-for i in range(0, 14):
-    print(i)
-    ax[i].imshow(images[i], cmap='viridis')
+fig, ax = plt.subplots(1, 24, figsize=(15,3))
+for i in range(0, 24):
+    ax[i].imshow(output[i], cmap='viridis')
     ax[i].get_xaxis().set_visible(False)
     ax[i].get_yaxis().set_visible(False)
 fig.tight_layout()
@@ -44,3 +50,4 @@ plt.show()
 stop = timeit.default_timer()
 execution_time = stop - start
 print("Time: " + str(execution_time))
+'''
